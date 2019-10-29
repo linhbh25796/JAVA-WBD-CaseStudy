@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create customer</title>
+
+</head>
+<style>
+    .form {
+        border: 1px solid red;
+        padding: 2%;
+        width: 20%;
+    }
+</style>
+<body>
+<p>
+    <a href="/">Back</a>
+</p>
+<th:block th:if="${message}">
+    <p th:text="${message}"></p>
+</th:block>
+<form class="form" th:action="@{/create-employee}" th:object="${employee}" method="post">
+    <table>
+        <h1>Thêm nhân viên mới</h1>
+
+        <tr>
+            <td> Ảnh đại diện</td>
+            <td><input type="text" th:field="*{avatar}"/></td>
+        </tr>
+        <tr>
+            <td> Tên</td>
+            <td><input type="text" th:field="*{name}"/></td>
+        </tr>
+        <tr>
+            <td>Phòng</td>
+            <td>
+                <select th:field="*{departmentOfEmployee}">
+                    <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td> Ngày sinh</td>
+            <td><input type="text" th:field="*{birthDate}"/></td>
+        </tr>
+        <tr>
+            <td> Địa chỉ</td>
+            <td><input type="text" th:field="*{address}"/></td>
+        </tr>
+        <tr>
+            <td> Lương</td>
+            <td><input type="text" th:field="*{salary}"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" value="Hủy"/></td>
+            <td><input type="submit" value="Lưu"></td>
+        </tr>
+
+    </table>
+</form>
+</body>
+</html>

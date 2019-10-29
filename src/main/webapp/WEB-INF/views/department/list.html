@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Department</title>
+</head>
+<body>
+<a href="/create-department">Thêm phòng ban mới</a>
+<br>
+<a href="/">Về trang home</a>
+<h1>Phòng ban</h1>
+<table border="1">
+    <tr>
+        <th>Tên phòng</th>
+        <th>Xóa</th>
+        <th>Sửa</th>
+    </tr>
+    <th:block th:each="department : ${departmentList}">
+        <tr>
+<!--            <a th:href="@{/view-province/__${department.id}__}" </a>-->
+            <td> <label th:text="${department.name}"></label></td>
+            <td><a th:href="@{/delete-department/__${department.id}__ }">Xóa</a></td>
+            <td><a th:href="@{/edit-department/__${department.id}__ }">Sửa</a></td>
+        </tr>
+    </th:block>
+</table>
+</body>
+</html>

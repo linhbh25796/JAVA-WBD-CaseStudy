@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sửa nhân viên</title>
+</head>
+<body>
+<h1>Sửa thông tin nhân viên</h1>
+<p>
+    <a href="/">Danh sách nhân viên</a>
+</p>
+<th:block th:if="${message}">
+    <p th:text="${message}"></p>
+</th:block>
+<form th:action="@{/edit-employee}" th:object="${employee}" method="post">
+    <input th:type="hidden" name="id" th:field="*{id}">
+    <table>
+        <tr>
+            <td>Ảnh đại diện:</td>
+            <td><input type="text" th:field="*{avatar}"/></td>
+        </tr>
+        <tr>
+            <td>Tên:</td>
+            <td><input type="text" th:field="*{name}"/></td>
+        </tr>
+        <tr>
+            <td>Ngày sinh:</td>
+            <td><input type="text" th:field="*{birthDate}"/></td>
+        </tr>
+
+        <tr>
+            <td>Phòng:</td>
+            <td>
+                <select name="departmentOfEmployee">
+                    <option th:each="d : ${departments}"
+                            th:value="${d.id}"
+                            th:text="${d.name}"
+                            th:selected="(${d.id} == *{departmentOfEmployee})"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Địa chỉ:</td>
+            <td><input type="text" th:field="*{address}"/></td>
+        </tr>
+        <tr>
+            <td>Lương:</td>
+            <td><input type="text" th:field="*{salary}"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Sửa"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

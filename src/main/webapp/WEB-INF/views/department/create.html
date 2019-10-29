@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tạo phòng </title>
+
+</head>
+<style>
+    .form{
+        border: 1px solid red;
+        padding: 2%;
+        width: 20%;
+    }
+</style>
+<body>
+<p>
+    <a href="/department-list">Trở lại</a>
+</p>
+<th:block th:if="${message}">
+    <p th:text="${message}"></p>
+</th:block>
+<form class="form" th:action="@{/create-department}" th:object="${department}" method="post">
+    <table>
+        <h1>Thêm mới phòng ban</h1>
+        <tr>
+            <td>Tên </td>
+            <td><input type="text" th:field="*{name}"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button"  value="Hủy"/></td>
+            <td><input type="submit" value="Lưu"></td>
+        </tr>
+
+    </table>
+</form>
+</body>
+</html>
