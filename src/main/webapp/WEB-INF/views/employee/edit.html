@@ -7,17 +7,24 @@
 <body>
 <h1>Sửa thông tin nhân viên</h1>
 <p>
-    <a href="/">Danh sách nhân viên</a>
+    <a href="/">Về trang Home</a>
 </p>
+<p>
+    <a href="/employee-list">Về danh sách nhân viên</a>
+</p>
+<th:block th:if="${errorMessage}">
+    <p th:text="${errorMessage}"></p>
+</th:block>
+
 <th:block th:if="${message}">
     <p th:text="${message}"></p>
 </th:block>
-<form th:action="@{/edit-employee}" th:object="${employee}" method="post">
+<form th:action="@{/edit-employee}" th:object="${employee}" method="post" enctype="multipart/form-data">
     <input th:type="hidden" name="id" th:field="*{id}">
     <table>
         <tr>
             <td>Ảnh đại diện:</td>
-            <td><input type="text" th:field="*{avatar}"/></td>
+            <td><input type="file" th:field="*{avatar}"/></td>
         </tr>
         <tr>
             <td>Tên:</td>
@@ -25,7 +32,7 @@
         </tr>
         <tr>
             <td>Ngày sinh:</td>
-            <td><input type="text" th:field="*{birthDate}"/></td>
+            <td><input type="text" th:field="*{birthDate}"  placeholder="MM-dd-yyyy"/></td>
         </tr>
 
         <tr>

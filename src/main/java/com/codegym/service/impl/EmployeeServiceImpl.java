@@ -1,5 +1,6 @@
 package com.codegym.service.impl;
 
+import com.codegym.entity.EmployeeForm;
 import com.codegym.model.Employee;
 import com.codegym.repository.EmployeeRepository;
 import com.codegym.service.EmployeeService;
@@ -8,9 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
+
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -28,8 +34,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee findById(Long id) {
-        return employeeRepository.findOne(id);
+        return  employeeRepository.findOne(id);
     }
+
 
     @Override
     public void remove(Long id) {

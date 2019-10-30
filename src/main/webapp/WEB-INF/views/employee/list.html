@@ -5,11 +5,14 @@
     <title>Danh sách nhân viên</title>
 </head>
 <body>
+<p>
+    <a href="/">Về trang Home</a>
+</p>
 <a href="/create-employee">Tạo nhân viên mới</a>
 <h1>Danh sách nhân viên</h1>
-<form>
-    Search by name:
-    <input name="a" type="text"/>
+<form >
+    Search by department:
+    <input name="name" type="text"/>
     <input type="submit" value="Search"/>
 </form>
 <br/>
@@ -26,7 +29,10 @@
     </tr>
     <th:block th:each="employee : ${employeeList}">
         <tr>
-            <td th:text="${employee.avatar}"></td>
+
+            <td >
+                <img width="150px" height="150px" th:src="@{'/i/' + ${employee.avatar}}">
+            </td>
             <td th:text="${employee.name}"></td>
             <td th:text="${employee.birthDate}"></td>
             <td th:text="${employee.departmentOfEmployee}"></td>

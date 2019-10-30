@@ -1,6 +1,7 @@
 package com.codegym.entity;
 
 import com.codegym.model.Employee;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -16,15 +17,25 @@ public class EmployeeDetail {
     public EmployeeDetail() {
     }
 
-    public EmployeeDetail(Employee employee) {
-        this.id = employee.getId();
-        this.name = employee.getName();
-        this.birthDate = ""+employee.getBirthDate();
-        this.address = employee.getAddress();
-        this.avatar = employee.getAvatar();
-        this.salary = employee.getSalary();
-        this.departmentOfEmployee = ""+employee.getDepartmentOfEmployee();
+    public EmployeeDetail(Long id, String name, String birthDate, String address, String avatar, String salary, String departmentOfEmployee) {
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.avatar = avatar;
+        this.salary = salary;
+        this.departmentOfEmployee = departmentOfEmployee;
     }
+
+//        public EmployeeDetail(Employee employee) {
+//        this.id = employee.getId();
+//        this.name = employee.getName();
+//        this.birthDate = ""+employee.getBirthDate();
+//        this.address = employee.getAddress();
+//        this.avatar = employee.getAvatar();
+//        this.salary = employee.getSalary();
+//        this.departmentOfEmployee = ""+employee.getDepartmentOfEmployee();
+//    }
 
     public Long getId() {
         return id;

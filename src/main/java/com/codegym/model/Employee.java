@@ -10,10 +10,10 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String birthDate;
+    private LocalDate birthDate;
     private String address;
     private String avatar;
-    private String salary;
+    private Double salary;
 
     @Column(name = "department_id")
     private Long departmentOfEmployee;
@@ -21,13 +21,13 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String name, String birthDate, String address, String avatar, String salary) {
+    public Employee(String name, LocalDate birthDate, String address, String avatar, Double salary,Long departmentOfEmployee) {
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;
         this.avatar = avatar;
         this.salary = salary;
-
+        this.departmentOfEmployee = departmentOfEmployee;
     }
 
     public Long getId() {
@@ -46,11 +46,11 @@ public class Employee {
         this.name = name;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -70,17 +70,15 @@ public class Employee {
         this.avatar = avatar;
     }
 
-    public String getSalary() {
+    public Double getSalary() {
         return salary;
     }
 
-    public void setSalary(String salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
 
-    public Employee(Long departmentOfEmployee) {
-        this.departmentOfEmployee = departmentOfEmployee;
-    }
+
 
     public Long getDepartmentOfEmployee() {
         return departmentOfEmployee;

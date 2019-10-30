@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class EmployeeDAO {
             i = 0;
             item = new EmployeeDetail();
             item.setId((Long.parseLong("" + row[i++])));
-            item.setDepartmentOfEmployee("" + row[i++]);
+            item.setDepartmentOfEmployee(""+ row[i++]);
             item.setAvatar("" + row[i++]);
             item.setName("" + row[i++]);
             item.setBirthDate("" + row[i++]);
@@ -90,4 +93,7 @@ public class EmployeeDAO {
             }
             return employeeDetails;
         }
+
+
+
 }

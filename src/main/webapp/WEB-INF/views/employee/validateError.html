@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p>
+    <a href="/">Về trang home</a>
+</p>
+<p>
+    <a href="/employee-list">Về danh sách nhân viên</a>
+</p>
+<p>
+    <a href="/create-employee">Tạo lại nhân viên</a>
+</p>
+<th:block th:if="${errorMessage}">
+    <p th:text="${errorMessage}" ></p>
+</th:block>
+</body>
+</html>
