@@ -3,17 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách nhân viên</title>
+    <style>
+        .pagination a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+    </style>
 </head>
 <body>
+
 <p>
     <a href="/">Về trang Home</a>
 </p>
+<p>
+    <a href="/employee-list">Danh sách nhân viên</a>
+</p>
 <a href="/create-employee">Tạo nhân viên mới</a>
 <h1>Danh sách nhân viên</h1>
-<form >
+<form action="/employee-list-search" method="post" th:object="${searchList}">
     Search by department:
-    <input name="name" type="text"/>
+    <select th:field="*{departmentOfEmployee}">
+        <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"></option>
+    </select>
     <input type="submit" value="Search"/>
+    <!--    <input name="name" type="text"/>-->
+    <!--    <input type="submit" value="Search"/>-->
 </form>
 <br/>
 <table border="1">
@@ -30,7 +47,7 @@
     <th:block th:each="employee : ${employeeList}">
         <tr>
 
-            <td >
+            <td>
                 <img width="150px" height="150px" th:src="@{'/i/' + ${employee.avatar}}">
             </td>
             <td th:text="${employee.name}"></td>
@@ -43,20 +60,23 @@
         </tr>
     </th:block>
 </table>
-<br/>
-<form action="/employee-list-asc" method="post">
-    <input type="submit" value="Sắp xếp giá tăng dần"/>
-</form>
-<br/>
-<form action="/employee-list-desc" method="post">
-    <input type="submit" value="Sắp xếp giá giảm dần"/>
-</form>
-<br/>
+
+
 <div>
+    <!--    <p th:each="number: ${#numbers.sequence(0,5)}">-->
+    <!--        <span th:text="${number}"></span>-->
+    <!--    </p>-->
     Trang:
-    <!--    <a th:href="@{'/notes'(page=${notes.number - 1})}" th:if="${notes.hasPrevious()}">Previous</a>-->
-    <!--    <span th:text="${notes.number + 1}"></span>/<span th:text="${notes.totalPages}"></span>-->
-    <!--    <a th:href="@{'/notes'(page=${notes.number + 1})}" th:if="${notes.hasNext()}">Next</a>-->
+    <div class="pagination" th:each="i: ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/employee-list(page=${i},pageSize=${pageSize})}"><span th:text="${i+1}"></span> </a>
+    </div>
+
+    <!--    <a th:href="@{/employee-list(page=${pageNumber}-1,pageSize=5)}">Previous </a>-->
+    <!--    <a th:href="@{/employee-list(page=${pageNumber},pageSize=5)}"><span th:text="${pageNumber+1}"></span> </a>-->
+    <!--    <a th:href="@{/employee-list(page=${pageNumber}+1,pageSize=5)}">Next </a>-->
+
+    <!--    <a th:href="@{/employee-list(page=${pageNumber+2})}">2 </a>-->
 </div>
+
 </body>
 </html>

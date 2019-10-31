@@ -16,6 +16,8 @@ public interface EmployeeService {
 
     Employee findById(Long id);
 
+    void edit(EmployeeForm employeeForm,String avatar);
+
     void remove(Long id);
 
     Iterable<Employee> findAllByName(Employee employee);

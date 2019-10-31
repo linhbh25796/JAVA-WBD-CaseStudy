@@ -37,6 +37,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return  employeeRepository.findOne(id);
     }
 
+    @Override
+    public void edit(EmployeeForm employeeForm, String avatar) {
+        Employee employeeObject = employeeRepository.findOne(employeeForm.getId());
+        employeeObject.setName(employeeForm.getName());
+        employeeObject.setAddress(employeeForm.getAddress());
+        employeeObject.setBirthDate(employeeForm.getBirthDate());
+        employeeObject.setSalary(employeeForm.getSalary());
+        employeeObject.setAvatar(avatar);
+        employeeObject.setDepartmentOfEmployee(employeeForm.getDepartmentOfEmployee());
+        employeeRepository.save(employeeObject);
+    }
+
 
     @Override
     public void remove(Long id) {

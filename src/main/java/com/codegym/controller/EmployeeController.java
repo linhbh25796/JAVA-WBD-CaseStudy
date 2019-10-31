@@ -13,16 +13,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -51,15 +49,37 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee-list")
-    public ModelAndView listEmployee(Pageable pageable) {
+    public ModelAndView listEmployee(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize",required = false) Integer pageSize) {
+        if (pageSize == null) pageSize = 5 ;
+        if (page == null) page = 0;
         List<EmployeeDetail> listEmployee;
-        listEmployee = employeeDAO.getListEmployee(pageable);
-        System.out.println(">>> list employee:" + listEmployee);
-        EmployeeDetail employeeDetail = new EmployeeDetail();
+        int totalRecord = employeeDAO.getListEmployeeLength();
+        listEmployee = employeeDAO.getListEmployee(page,pageSize); // trang hien tai dung show
+        System.out.println(">>> total record:"+totalRecord);
+
+        ModelAndView modelAndView = new ModelAndView("/employee/list");
+        modelAndView.addObject("totalPages", totalRecord/pageSize+1);  //tong so trang de quan ly 1 2 3 4
+        modelAndView.addObject("pageSize", pageSize);
+        modelAndView.addObject("employeeList", listEmployee);
+        modelAndView.addObject("searchList", new Employee()); //rong
+        return modelAndView;
+    }
+    @PostMapping("/employee-list-search")
+    public ModelAndView displaySearchList(@ModelAttribute("searchList") Employee employee) {
+
+
+        List<EmployeeDetail> listEmployee;
+
+        listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee()); // trang hien tai dung show
+        System.out.println(">>> total record:");
+        //listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee(),);
+        //EmployeeDetail employeeDetail = new EmployeeDetail();
+
         ModelAndView modelAndView = new ModelAndView("/employee/list");
         modelAndView.addObject("employeeList", listEmployee);
         return modelAndView;
     }
+
 
     //Create employee
     @GetMapping("/create-employee")
@@ -79,32 +99,20 @@ public class EmployeeController {
             System.out.println("Result Error Occurred" + result.getAllErrors());
             return modelAndView;
         }
-        // lay ten file
         MultipartFile multipartFile = employeeForm.getAvatar();
         String fileName = multipartFile.getOriginalFilename();
         String fileUpload = env.getProperty("file_upload").toString();
-
-        // luu file len server
         try {
-            //multipartFile.transferTo(imageFile);
+
             FileCopyUtils.copy(employeeForm.getAvatar().getBytes(), new File(fileUpload + fileName));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
-
-        // tao doi tuong de luu vao db
-
-
         Employee employeeObject = new Employee(
                 employeeForm.getName(), employeeForm.getBirthDate(),
                 employeeForm.getAddress(), fileName,
                 employeeForm.getSalary(), employeeForm.getDepartmentOfEmployee()
         );
-
-        // luu vao db
-        //productService.save(productObject);
-
         employeeService.save(employeeObject);
         ModelAndView modelAndView = new ModelAndView("employee/create");
         modelAndView.addObject("employee", new EmployeeForm());
@@ -127,9 +135,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/edit-employee")
-    public ModelAndView updateCustomer(
-            @ModelAttribute("employee") EmployeeForm employeeForm,
-            BindingResult result) {
+    public ModelAndView updateCustomer(@ModelAttribute("employee") EmployeeForm employeeForm, BindingResult result) {
         if (result.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView("employee/validateError");
             modelAndView.addObject("errorMessage", "Nhập đúng định dạng mm-dd-yyyy");
@@ -153,15 +159,15 @@ public class EmployeeController {
         // tao doi tuong de luu vao db
 
 
-        Employee employeeObject = new Employee(
-                employeeForm.getName(), employeeForm.getBirthDate(),
-                employeeForm.getAddress(), fileName,
-                employeeForm.getSalary(), employeeForm.getDepartmentOfEmployee()
-        );
-        employeeService.remove(employeeForm.getId());
-        employeeService.save(employeeObject);
+//        Employee employeeObject = new Employee(
+//                employeeForm.getName(), employeeForm.getBirthDate(),
+//                employeeForm.getAddress(), fileName,
+//                employeeForm.getSalary(), employeeForm.getDepartmentOfEmployee()
+//        );
+      //  employeeService.remove(employeeForm.getId());
+        employeeService.edit(employeeForm,fileName);
         ModelAndView modelAndView = new ModelAndView("/employee/edit");
-        modelAndView.addObject("employee", employeeObject);
+        modelAndView.addObject("employee", employeeForm);
         modelAndView.addObject("message", "Đã sửa!!");
         return modelAndView;
        /* System.out.println(">>> employe for UPDATE:"+employee);
@@ -173,7 +179,7 @@ public class EmployeeController {
     }
 
     //Delete employee
-    @GetMapping("/delete-employee/{id}")
+    @GetMapping("/delete-employee/{id}") // path variable = bien nam tren url (path)
     public ModelAndView showDeleteForm(@PathVariable Long id) {
         Employee employee = employeeService.findById(id);
         if (employee != null) {
@@ -193,28 +199,8 @@ public class EmployeeController {
         return "redirect:employee-list";
     }
 
-    //getListByPrice
-    @PostMapping("/employee-list-asc")
-    public ModelAndView listEmployeeByPriceASC(Pageable pageable) {
-        List<EmployeeDetail> listEmployee;
-        listEmployee = employeeDAO.getListByPriceASC(pageable);
-        System.out.println(">>> list employee:" + listEmployee);
-        EmployeeDetail employeeDetail = new EmployeeDetail();
-        ModelAndView modelAndView = new ModelAndView("/employee/list");
-        modelAndView.addObject("employeeList", listEmployee);
-        return modelAndView;
-    }
 
-    @PostMapping("/employee-list-desc")
-    public ModelAndView listEmployeeByPriceDESC(Pageable pageable) {
-        List<EmployeeDetail> listEmployee;
-        listEmployee = employeeDAO.getListByPriceDESC(pageable);
-//        System.out.println(">>> list employee:"+listEmployee);
-        EmployeeDetail employeeDetail = new EmployeeDetail();
-        ModelAndView modelAndView = new ModelAndView("/employee/list");
-        modelAndView.addObject("employeeList", listEmployee);
-        return modelAndView;
-    }
+
 
 
 }
