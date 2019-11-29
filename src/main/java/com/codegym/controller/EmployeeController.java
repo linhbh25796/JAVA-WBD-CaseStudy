@@ -18,6 +18,7 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -49,37 +50,61 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee-list")
-    public ModelAndView listEmployee(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize",required = false) Integer pageSize) {
-        if (pageSize == null) pageSize = 5 ;
+    public ModelAndView listEmployee(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (pageSize == null) pageSize = 5;
         if (page == null) page = 0;
         List<EmployeeDetail> listEmployee;
         int totalRecord = employeeDAO.getListEmployeeLength();
-        listEmployee = employeeDAO.getListEmployee(page,pageSize); // trang hien tai dung show
-        System.out.println(">>> total record:"+totalRecord);
+        listEmployee = employeeDAO.getListEmployee(page, pageSize); // trang hien tai dung show
+        //System.out.println(">>> total record:" + totalRecord);
 
         ModelAndView modelAndView = new ModelAndView("/employee/list");
-        modelAndView.addObject("totalPages", totalRecord/pageSize+1);  //tong so trang de quan ly 1 2 3 4
+        modelAndView.addObject("totalPages", totalRecord / pageSize + 1);  //tong so trang de quan ly 1 2 3 4
         modelAndView.addObject("pageSize", pageSize);
         modelAndView.addObject("employeeList", listEmployee);
         modelAndView.addObject("searchList", new Employee()); //rong
         return modelAndView;
     }
-    @PostMapping("/employee-list-search")
-    public ModelAndView displaySearchList(@ModelAttribute("searchList") Employee employee) {
 
+    /* -- back up
+     @PostMapping("/employee-list-search")
+     public ModelAndView displaySearchList(@ModelAttribute("searchList") Employee employee) {
+
+
+         List<EmployeeDetail> listEmployee;
+
+         listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee()); // trang hien tai dung show
+         System.out.println(">>> total record:");
+         //listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee(),);
+         //EmployeeDetail employeeDetail = new EmployeeDetail();
+
+         ModelAndView modelAndView = new ModelAndView("/employee/list");
+         modelAndView.addObject("employeeList", listEmployee);
+         return modelAndView;
+     }*/
+
+    @PostMapping("/employee-list-search")
+    public ModelAndView displaySearchList(@ModelAttribute("searchList") Employee employee,
+                                          @RequestParam(value = "page", required = false) Integer page,
+                                          @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (pageSize == null) pageSize = 5;
+        if (page == null) page = 0;
 
         List<EmployeeDetail> listEmployee;
+        int totalRecord = employeeDAO.getListEmployeeLength();
 
-        listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee()); // trang hien tai dung show
-        System.out.println(">>> total record:");
+
+        listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee(),page,pageSize); // trang hien tai dung show
+        //System.out.println(">>> total record:");
         //listEmployee = employeeDAO.getSearchList(employee.getDepartmentOfEmployee(),);
         //EmployeeDetail employeeDetail = new EmployeeDetail();
 
         ModelAndView modelAndView = new ModelAndView("/employee/list");
+        modelAndView.addObject("totalPages", totalRecord / pageSize + 1);  //tong so trang de quan ly 1 2 3 4
+        modelAndView.addObject("pageSize", pageSize);
         modelAndView.addObject("employeeList", listEmployee);
         return modelAndView;
     }
-
 
     //Create employee
     @GetMapping("/create-employee")
@@ -155,27 +180,12 @@ public class EmployeeController {
             ex.printStackTrace();
         }
 
-
-        // tao doi tuong de luu vao db
-
-
-//        Employee employeeObject = new Employee(
-//                employeeForm.getName(), employeeForm.getBirthDate(),
-//                employeeForm.getAddress(), fileName,
-//                employeeForm.getSalary(), employeeForm.getDepartmentOfEmployee()
-//        );
-      //  employeeService.remove(employeeForm.getId());
-        employeeService.edit(employeeForm,fileName);
+        employeeService.edit(employeeForm, fileName);
         ModelAndView modelAndView = new ModelAndView("/employee/edit");
         modelAndView.addObject("employee", employeeForm);
         modelAndView.addObject("message", "Đã sửa!!");
         return modelAndView;
-       /* System.out.println(">>> employe for UPDATE:"+employee);
-        employeeService.save(employee);
-        ModelAndView modelAndView = new ModelAndView("/employee/edit");
-        modelAndView.addObject("employee", employee);
-        modelAndView.addObject("message", "Đã sửa!!");
-        return modelAndView;*/
+
     }
 
     //Delete employee
@@ -198,9 +208,6 @@ public class EmployeeController {
         employeeService.remove(employee.getId());
         return "redirect:employee-list";
     }
-
-
-
 
 
 }

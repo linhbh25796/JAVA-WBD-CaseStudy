@@ -27,16 +27,6 @@ public class EmployeeDetail {
         this.departmentOfEmployee = departmentOfEmployee;
     }
 
-//        public EmployeeDetail(Employee employee) {
-//        this.id = employee.getId();
-//        this.name = employee.getName();
-//        this.birthDate = ""+employee.getBirthDate();
-//        this.address = employee.getAddress();
-//        this.avatar = employee.getAvatar();
-//        this.salary = employee.getSalary();
-//        this.departmentOfEmployee = ""+employee.getDepartmentOfEmployee();
-//    }
-
     public Long getId() {
         return id;
     }
